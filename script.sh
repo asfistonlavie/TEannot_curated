@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env -S bash -e -x
 
 # TE annotation pipeline
 
@@ -14,16 +14,13 @@
 # TO EDIT
 # Fill up the variables with programs full paths. If a program is in $PATH or running in Docker replace the path with ""
 
-RM2_PATH=${HOME}/softwares/RepeatModeler-2.0.4/
-DNAPT_PATH=${HOME}/bin/pipeline_dnapipe/
-RM_PATH=${HOME}/softwares/RepeatMasker-4.1.5/
-EDTA_PATH=${HOME}/bin/EDTA/
-MCHELPER_PATH=${HOME}/bin/mchelper/
-CONDA_PATH=${HOME}/miniconda3/
+RM2_PATH=/opt/RepeatModeler/
+DNAPT_PATH="" # (disabled within the container yet)
+RM_PATH=/opt/RepeatMasker/
+MCHELPER_PATH=/opt/MCHelper/
+CONDA_PATH=/opt/miniforge/
 #############################
 # DO NOT EDIT BELOW THIS LINE
-
-set -e
 
 THREADS=1
 SAMPLING_SIZE="0.25"
@@ -108,6 +105,10 @@ while [[ $# -gt 0 ]]; do
 		CONTAINER_MODE="1"
 		shift
 		;;
+        
+        *)
+            >&2 echo "Invalid argument: $1"
+            exit 1
 	esac
 done
 
@@ -142,6 +143,7 @@ fi
 
 OUT_SP=${OUT}/${SPECIES}
 
+ASSEMBLY=$(realpath ${ASSEMBLY})
 if [[ -v ASSEMBLY ]]; then
 
 	BASENAME_ASSEMBLY=$(basename ${ASSEMBLY})
@@ -180,7 +182,6 @@ if [ "$RUN_RM2" = "1" ] && [ ! -v VM_MODE ]; then
 	echo "Running RepeatModeler2"
 	"${RM2_PATH}"BuildDatabase -name ${RM2_OUTPUT}/${SPECIES} -engine ncbi $ASSEMBLY
 	(
-	cd $RM2_OUTPUT
 	"${RM2_PATH}"RepeatModeler -engine ncbi -threads $THREADS -database ${RM2_OUTPUT}/${SPECIES}
 	RM2_LIB=$(readlink -f ${SPECIES}\-families.fa)
 	)
@@ -367,11 +368,12 @@ if [ "$RUN_MASK" = "1" ]; then
 	if [[ -f ${MCHELPER_OUTPUT}/curated_sequences_NR.fa ]]; then
 
 		RM_OUTPUT=${OUT_SP}/RepeatMasker
+		ABS_MCO=$(realpath $MCHELPER_OUTPUT)
 		mkdir -p ${RM_OUTPUT}
 		(
 			cd $RM_OUTPUT
 			echo "Running RepeatMasker with ${MCHELPER_OUTPUT}/curated_sequences_NR.fa"
-			${RM_PATH}/RepeatMasker -lib ${MCHELPER_OUTPUT}/curated_sequences_NR.fa -a -gff -pa $THREADS $ASSEMBLY
+			${RM_PATH}/RepeatMasker -lib ${ABS_MCO}/curated_sequences_NR.fa -a -gff -pa $THREADS $ASSEMBLY
 		)
 	else
 
