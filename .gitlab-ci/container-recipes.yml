@@ -1,0 +1,14 @@
+container-recipes:
+  stage: render
+  rules:
+    - changes:
+        - .gitlab-ci/container-recipes.yml
+        - containerize.bash
+  image:
+    name: perl:5.38.2
+  script:
+    - ./containerize.bash https://gitlab.com/iago-lito/teannot_curated/-/raw/main
+  artifacts:
+    paths:
+      - Dockerfile
+      - apptainer.def

@@ -1,0 +1,4 @@
+stages:
+  - render
+include:
+  - local: '.gitlab-ci/*.yml'
