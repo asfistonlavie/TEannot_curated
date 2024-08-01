@@ -1,0 +1,29 @@
+name: render
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - .github/worflows/container-recipes.yml
+      - containerize.bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: perl:5.38.2
+    env:
+     BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+    steps:
+      - name: generate recipes
+        run: ./containerize.bash https://raw.githubusercontent.com/asfistonlavie/TEannot_curated/${BRANCH_NAME}/containerize.bash
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-recipes
+          path: |
+            Dockerfile
+            apptainer.def
