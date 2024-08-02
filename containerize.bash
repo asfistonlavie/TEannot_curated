@@ -159,9 +159,13 @@ new_layer "HMMER" "${DOWNLOADS}" <<EOF
 EOF
 
 new_layer "TRF" "${DOWNLOADS}" <<EOF
-	${glones} --branch v4.09.1 \\
-	    https://github.com/Benson-Genomics-Lab/TRF
+	${glones} https://github.com/Benson-Genomics-Lab/TRF
 	cd TRF
+	# Archlinux build tools are more recent than where TRF stopped -_-"
+	# Re-run the autotools:
+	autoreconf
+	automake
+	aclocal
 	mkdir build
 	cd build
 	../configure --prefix /opt/trf
