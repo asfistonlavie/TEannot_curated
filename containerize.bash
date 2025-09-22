@@ -303,7 +303,7 @@ EOF
 
 # EDTA.
 new_layer "EDTA" "${DOWNLOADS}" <<EOF
-	git clone --recursive --depth 1 https://github.com/oushujun/EDTA.git
+	git clone --recursive --branch v2.2.2 https://github.com/oushujun/EDTA.git
 	cd EDTA
 	${mamba} env create --name EDTA -f EDTA*.yml
 	cd ..
