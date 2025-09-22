@@ -110,7 +110,7 @@ new_layer "Miniforge" ${DOWNLOADS} <<EOF
 	prefix="/opt/miniforge"
 	bash \${file} -b -p "\${prefix}"
 	echo "auto_activate_base: false" >> ~/.condarc
-	\${prefix}/bin/mamba init
+	\${prefix}/bin/mamba shell init --shell bash
 EOF
 
 mamba="/opt/miniforge/bin/mamba"
@@ -329,7 +329,7 @@ new_layer "Container ergonomics." <<EOF
 	pacman -Sy --noconfirm ${CONTAINER_DEPS}
 	sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 	sed -i 's/\\(ZSH_THEME="\\).*"/\\1bira"/' ~/.zshrc
-	${mamba} init zsh
+	${mamba} shell init --shell zsh
 	source /opt/miniforge/etc/profile.d/mamba.sh
 EOF
 
