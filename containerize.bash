@@ -110,7 +110,7 @@ new_layer "Miniforge" ${DOWNLOADS} <<EOF
 	prefix="/opt/miniforge"
 	bash \${file} -b -p "\${prefix}"
 	echo "auto_activate_base: false" >> ~/.condarc
-	\${prefix}/bin/mamba init
+	\${prefix}/bin/mamba shell init --shell bash
 EOF
 
 mamba="/opt/miniforge/bin/mamba"
