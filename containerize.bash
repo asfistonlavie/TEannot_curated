@@ -91,9 +91,14 @@ cdeps zsh
 glones="git clone --recursive --depth 1"
 
 new_layer "Packaged dependencies" ${WORKDIR} <<EOF
-	echo 'Server = https://mirrors.kernel.org/archlinux/\$repo/os/\$arch' \\
+	# Pin whole distro back in time because RMBlast broke.
+	# https://github.com/Dfam-consortium/RepeatMasker/issues/364
+	date="2024/08/02"
+	# https://wiki.archlinux.org/title/Arch_Linux_Archive
+	echo 'SigLevel = Never' >> /etc/pacman.conf
+	echo 'Server = https://archive.archlinux.org/repos/'\$date'/\$repo/os/\$arch' \\
 	     > /etc/pacman.d/mirrorlist
-	pacman -Syu --noconfirm
+	pacman -Syyuu --noconfirm
 	pacman -Sy --noconfirm ${BUILD_DEPS} ${DEPS}
 
 	# https://wiki.archlinux.org/title/MariaDB
