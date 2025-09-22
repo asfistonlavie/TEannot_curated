@@ -22,8 +22,8 @@ There are three possible options.
    if the above doesn't work on your platform:
 
    ```sh
-   $ docker buildx build -t teannot_curated \
-     https://gitlab.com/iago-lito/teannot_curated/-/jobs/artifacts/main/raw/Dockerfile?job=container-recipes
+   $ wget -O Dockerfile https://gitlab.com/iago-lito/teannot_curated/-/jobs/artifacts/main/raw/Dockerfile?job=container-recipes
+   $ docker buildx build -t teannot_curated .
    ```
 
 3. Or build it yourself from your own repository clone.
