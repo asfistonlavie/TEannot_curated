@@ -188,7 +188,7 @@ EOF
 
 new_layer "Recon" "${DOWNLOADS}" <<EOF
 	file="RECON-1.08.tar.gz"
-	wget https://www.repeatmasker.org/RepeatModeler/\${file}
+	wget https://www.repeatmasker.org/\${file}
 	gunzip \${file}
 	tar xvf \${file%.gz}
 	cd \${file%.tar.gz}
